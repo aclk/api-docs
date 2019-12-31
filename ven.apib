@@ -1,0 +1,3918 @@
+FORMAT: 1A
+HOST: http://sdapi.chinazjm.com/
+
+# 指静脉生态 API
+
+此文档为所有指静脉 RESTful API  
+内部通讯队列接口不在此文档中。  
+请勿将链接发送给外部人士，如有需要，复制相关章节产生新的文档并发送。
+
+
+# Data Structures
+
+
+## Codemap (object)
++ name: `DIRECTION_CD` (string, required) - 名称
++ editable `false` (boolean) - 是否可以编辑
++ codemap `{"1": "进门", "2": "出门"}` - 字典
+
+## UserPost (object)
++ username: `loginname`  (string) - 登录用户名
++ password: `encrypted string` (string) - salt 在程序参数中定义
++ privileges - 权限列表
+    + access: `admin` (string) - 系统和权限
+    + payment: `user` (string) - 系统和权限
++ idcard: `610101198012210339` (string) - 身份证号
++ name: `小明` (string) - 姓名
++ employeeID: `00001` ( string ) - 工号
++ cellphone: `18611184528` ( string ) - 中国手机号
++ cardID: `00000001` ( string ) - RFID身份识别卡号
+
+## User (object)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a
++ username: `loginname`  (string) - 登录用户名
++ privileges - 权限列表
+    + access: `admin` (string) - 系统和权限
+    + payment: `user` (string) - 系统和权限
++ idcard: `610101198012210339` (string) - 身份证号
++ name: `小明` (string) - 姓名
++ employeeID: `00001` ( string ) - 工号
++ cellphone: `18611184528` ( string ) - 中国手机号
++ cardID: `00000001` ( string ) - RFID身份识别卡号
+
+## PersonFeature (object)
++ id: `02729a3e-c198-11e6-9f03-0242ac130002` (string, required) - uuid
++ finger: `r2` (string, required) - 手指，l左r右，从拇指开始12345
+
+## PersonPost (object)
++ idcard: `610101198012210339` (string) - 身份证号
++ name: `小明` (string) - 姓名
++ sex: `1` (string) - 性别
++ nation: `汉` (string) - 民族
++ birthday: `19881221` (string) - 生日
++ idcardStartDate: `20070829` (string) - 身份证开始日期
++ idcardEndDate: `20170829` (string) - 身份证结束日期
++ visaplace: `西安市公安局新城分局` (string) - 发行单位
++ idcardAddress: `西安市新城区北大街1号` (string) - 身份证地址
++ idcardCredibility: `false` (boolean,default) - 身份证可信度(是否来源于采集设备)
++ employeeID: `00001` ( string ) - 工号
++ cellphone: `18611184528` ( string ) - 中国手机号
++ cardID: `00000001` ( string ) - RFID身份识别卡号
+
+## Person (PersonPost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a
++ features (array[PersonFeature])
++ etag: `6fc5c5f5-9838-4edc-a21d-a5df37f17d5f` (string) - etag
+
+## Feature (PersonFeature)
++ personID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - person id
++ feature: `...` (string) - 特征字符串
+
+## DevicePost (object)
++ name: `大门` (string, required) - 名称
++ typeCD: `3` (string, required) - 分类
++ modelCD: `GATE101` (string, required) - 型号
++ areaID: `8c8310a1-b6af-11e6-b23a-0242ac140009` (string,required) - 区域 ID
++ isCollect: false (boolean, default) - 是否采集设备
++ isAttendance: false (boolean, default) - 是否考勤设备
++ attachment: `{}` (string) - json描述串
++ showName: true (boolean) - 是否显示姓名
+
+## Device (DevicePost)
++ id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
++ etag: `6fc5c5f5-9838-4edc-a21d-a5df37f17d5f` (string) - etag
+
+
+## MerchantPost (object)
++ name: `商户A` (string, required) - 商户名称
++ address: `地址` (string, optional) - 地址
++ linkManName: `联系人姓名` (string, required) - 商户联系人
++ cellPhone: `联系电话` (string, required) - 联系电话
++ remark: `备注` (string, required) - 备注
+
+
+## Merchant (MerchantPost)
++ id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - uuid
++ deviceList (array[Device]) - 消费设备集合
+ 
+
+## MerchantDevicePost (object)
++ merchantID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - 商户ID
+
+
+## AccountPost (object)
++ owner (Customer, required) - 账号主用户
++ balance: `5000` (number, optional) - 账户余额,虚拟+现金(单位分)
++ cash: `3000` (number, optional) - 账户现金余额（单位分）
++ allConsumption: `0` (number, default) - 账户总消费金额(单位分)
++ allCash: `0` (number, default) - 账户总消费现金
++ status: `1` (string, default) - 账户状态(1正常/2冻结)
+
+
+## Account (AccountPost)
++ id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - uuid
++ customerList (array[Customer]) - 附属用户信息
+
+## CustomerPost (object)
++ name: `小明` (string, required) - 账号姓名
++ sex: `1/2` (string, required) - 性别(1男/2女)
++ idcard: `612527199005120098` (string, required) - 身份证号
++ employeeID: `0000012` (string, required) - 工号
++ cellphone: `18611184528` (string) - 中国手机号
++ accountID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - 账户ID
++ relation: `父子` (string, optional) - 与主账号关系，本人/父子/母子/夫妻等
++ cardID: `卡号` (string, optional) - 卡号ID
+
+
+## Customer (CustomerPost)
++ id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - uuid
++ etag: `6fc5c5f5-9838-4edc-a21d-a5df37f17d5f` (string) - etag
+
+## DealRecord (object)
++ id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - uuid
++ accountID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - 消费账户ID
++ customerID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - 消费人ID
++ customerName: `小明` (string) - 消费人姓名
++ amount: `300` (number, required) - 消费金额
++ virtualMoney: `200` (number, required) - 虚拟消费金额
++ realMoney: `100` (number, required) - 真实消费金额
++ dealTime: `2006-01-02 15:04:05` (string) - 消费时间
++ merchantID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - 消费商户ID
++ merchantName: `商户A` (string) - 消费商户名称
++ deviceID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - 消费设备ID
++ deviceName: `设备1` (string) - 消费设备名
++ transactionID: `fff0009898` (string) - 交易流水号
++ remark: `备注` (string) - 备注
++ operatory: `pos` (string) - 默认是pos机消费，管理员充值时默认sysadmin这里标示操作人员
++ type: `1` (string) - 交易记录类型，1消费/2退款/3充值
++ status: `1` (string) - 是否支持撤销，1可撤销/2无法撤销，默认为1
+
+## PosDeviceGet(Device)
++ merchant (Merchant, optional) - 商家信息
+
+## Visitors (object)
++ total:`1` (number) - 记录总数
++ data：(array[Visitor]) - 访客信息
+
+## Visitor (VisitorPost)
++ id:`cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - uuid
++ featureCount: `2` (number) - 指静脉个数
++ featureFinger: l2,l3 (array) - 指静脉信息
++ createAt:`2017-02-24 16:44:52` (string) - 创建时间
++ aupdateAt:`2017-02-27 09:38:06` (string) - 更新时间
++ lastVisitDate:`2017-02-27` (string) - 最后访问日期
+
+## VisitorPost (object)
++ name:`张蕊蕊` (string, required) - 姓名
++ sex:`女` (string) - 性别
++ nation:`汉` (string) - 民族
++ birthday:`1988-08-27` (string) - 生日
++ idcardPhoto:`/9j...` (string) - 身份证照片
++ idcardNumber:`620828198808272103` (string, required) - 身份证号
++ idcardAddr:`甘肃省会宁县郭城驿镇` (string) - 地址
++ idcardStart:`2014-08-25` (string) - 身份证开始日期
++ idcardEnd:`2024-08-25` (string) - 身份证结束日期
++ idcardVisaPlace:`会宁县公安局` (string) - 签发机关
++ photoURI:`QzL6gVhW.jpg` (string) - 照片名称
++ company:`**科技公司` (string) - 公司名称
++ phone:`13888888888` (string, required) - 联系电话
++ remark:`1人 携带笔记本一台` (string) - 备注
+
+## Interviewee (object)
++ id:`8b5df16a-fcc9-11e6-ab3d-0242ac120006` (string) - uuid
++ name:`杨喆` (string) - 被访人姓名
++ dpID:`fb6e81a3-fa64-11e6-a933-0242ac120009` (string) - 被访人部门ID
++ dpName:`西安圣点科技` (string) - 被访人部门
++ phone:`13888888888` (string) - 被访人联系电话
+
+## Organization (OrganizationPost)
++ id:`7bbaf364-fcca-11e6-9e9a-0242ac120009` (string) - 机构ID
+
+## OrganizationPost (object)
++ name:`行政部` (string) - 机构名称
++ parentid:`fb6e81a3-fa64-11e6-a933-0242ac120009` (string) - 父类机构ID
++ hasuser: false (boolean) - 是否拥有人员
+
+## Interviews (object)
++ total:`1` (number) - 记录总数
++ data：(array[Interview]) - 会谈信息
+
+## Interview (InterviewPost)
++ id:`920e5840-fa6d-11e6-b8d3-0242ac120004` (string) - uuid
+
+## InterviewPost (object)
++ visitorID:`cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 访客ID
++ visitorName:`张蕊蕊` (string, required) - 访客姓名
++ intervieweeID:`cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 被访人ID
++ intervieweeName:`张蕊洁` (string, required) - 被访人姓名
++ intervieweeDpID:`017553a1-fa65-11e6-a933-0242ac120009` (string, required) - 被访人部门ID
++ intervieweeDpName:`研发部` (string, required) - 被访人部门名称
++ intervieweePhone:`15812345678` (string) - 被访人电话
++ visitPeriod:`08:30-19:15` (string, required) - 会谈时间段
++ visitDate:`2017-02-24` (string, required) - 会谈日期
++ devices:e2189a5a-f811-11e6-b5c6-0242ac120016,f963f421-ed0d-11e6-82b6-0242ac120016 (array) - 指静脉信息
++ registerTime:`2017-02-24 16:45:19` (string, required) - 登记时间
++ logoutTime:`2017-02-27 09:45:23` (string, required) - 注销时间
+
+##Records (object)
++ total:`1` (number) - 记录总数
++ data：(array[Record]) - 会谈信息
+
+## Record (RecordPost)
++ id:`d3b3a9cb-fd63-11e6-9fba-0242ac120004`
+
+## RecordPost (object)
++ visitorID:`cde5b5b5-fa64-11e6-a603-0242ac120006`
++ visitorName:`张蕊洁`
++ deviceID:`4bc792b4-fcbe-11e6-ab3d-0242ac120006`
++ deviceName:`门禁49`
++ transitTime:`2017-02-28 11:13:07`
++ transitDirection:`1`
+
+## DeviceVisitor (object)
++ id:`cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 设备ID
++ name:`门禁1` (string) - 设备名称
++ areaId:`920e5840-fa6d-11e6-b8d3-0242ac120004` (string) - 区域ID
++ areaName:`A栋楼` (string) - 区域名称
+
+## Client (object)
++ app:`0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - PADID
++ secret:`0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - PAD秘钥
++ deviceID:`0b4d8400-b88c-11e6-b23a-02428c140009` (string) - 客户端应用标识
+## AccessPost (object)
++ name: `测试规则` (string) - 规则名称
++ entityType: `all` (string) - 实体类型，all全体/organization机构/position岗位/workgroup工作组/mumber员工
++ entityID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - 实体ID
++ deviceList (array[string]) - 设备集合
++ BeganDate: `2017-02-27` (string) - 规则开始日期
++ EndDate: `2017-02-27` (string) - 规则结束日期
++ BeganTime: `09:00:00` (string) - 规则开始时间
++ EndTime: `18:00:00` (string) - 规则结束时间
++ Week (array[string]) - 规则支持星期数，0代表星期天，依次递增
++ Status: `2` (string) - 规则是否启用，未启用为1，启用为2
+
+## Access (AccessPost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## AccRecord (object)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 用户ID
++ userName: `小强` (string) - 用户名称
++ employeeID: `88888` (string) - 工号
++ organizationID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 机构ID
++ organizationName: `圣点科技` (string) - 机构名称
++ positionID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 岗位ID
++ positionName: `后端开发` - 岗位名称
++ deviceID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 设备ID
++ deviceName: `大门设备` (string) - 设备名称
++ areaID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 区域ID
++ areaName: `大门` (string) - 区域名称
++ signDate: `2017-02-27` (string) - 打卡日期
++ signTime: `09:00:00` (string) - 打卡时间
++ type: `2` (string) - 进出门类型，1为进门，2为出门
+
+## AccessReportFormPost (object)
++ name: `开门记录` (string) - 报表名称
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 用户ID
++ userName: `小强` (string) - 用户名称
++ employeeID: `88888` (string) - 工号
++ organizationID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 机构ID
++ positionID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 岗位ID
++ deviceID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 设备ID
++ areaID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 区域ID
++ BeganDate: `2017-02-27` (string) - 打卡开始日期
++ EndDate: `2017-02-27` (string) - 打卡结束日期
++ BeganTime: `09:00:00` (string) - 打卡开始时间
++ EndTime: `18:00:00` (string) - 打卡结束时间
++ type: `2` (string) - 进出门类型，1为进门，2为出门
+
+## AccessReportForm (AccessReportFormPost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## CompTimePost (object)
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 用户ID
++ userName: `小强` (string) - 用户名称
++ beganDate: `2017-02-27` (string) - 开始日期
++ beganType: `1` (string) - 开始日期调休状态(1.上午半天,2.下午半天)
++ endDate: `2017-02-27` (string) - 结束日期
++ endType: `1` (string) - 结束日期调休状态(1.上午半天,2.下午半天)
++ registTime: `18:00:00` (string) - 记录时间
++ remark: `备注` (string) - 备注
+
+## CompTime (CompTimePost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## EgressPost (object)
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 用户ID
++ userName: `小强` (string) - 用户名称
++ beganDate: `2017-02-27` (string) - 开始日期
++ beganType: `1` (string) - 开始日期调休状态(1.上午半天,2.下午半天)
++ endDate: `2017-02-27` (string) - 结束日期
++ endType: `1` (string) - 结束日期调休状态(1.上午半天,2.下午半天)
++ registTime: `18:00:00` (string) - 记录时间
++ remark: `备注` (string) - 备注
+
+## Egress (EgressPost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## ErrandPost (object)
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 用户ID
++ userName: `小强` (string) - 用户名称
++ beganDate: `2017-02-27` (string) - 开始日期
++ beganType: `1` (string) - 开始日期调休状态(1.上午半天,2.下午半天)
++ endDate: `2017-02-27` (string) - 结束日期
++ endType: `1` (string) - 结束日期调休状态(1.上午半天,2.下午半天)
++ registTime: `18:00:00` (string) - 记录时间
++ remark: `备注` (string) - 备注
+
+## Errand (ErrandPost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## LeavePost (object)
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 用户ID
++ userName: `小强` (string) - 用户名称
++ beganDate: `2017-02-27` (string) - 开始日期
++ beganType: `1` (string) - 开始日期调休状态(1.上午半天,2.下午半天)
++ endDate: `2017-02-27` (string) - 结束日期
++ endType: `1` (string) - 结束日期调休状态(1.上午半天,2.下午半天)
++ registTime: `18:00:00` (string) - 记录时间
++ remark: `备注` (string) - 备注
+
+## Leave (LeavePost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## NeglectworkPost (object)
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` - 用户ID
++ userName: `小强` (string) - 用户名称
++ beganDate: `2017-02-27` (string) - 开始日期
++ beganType: `1` (string) - 开始日期调休状态(1.上午半天,2.下午半天)
++ endDate: `2017-02-27` (string) - 结束日期
++ endType: `1` (string) - 结束日期调休状态(1.上午半天,2.下午半天)
++ registTime: `18:00:00` (string) - 记录时间
++ remark: `备注` (string) - 备注
+
+## Neglectwork (NeglectworkPost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## HolidayPost (object)
++ day: `2017-02-27` (string) - 日期
++ type: `1` (string) - 类型（1工作日，2休假日）
++ category: `1` (string) - 节假日种类（1春节，2国庆，3元旦，4清明，5五一，6端午，7中秋，8其他）
++ remark: `备注` (string) - 备注
+
+## Holiday (HolidayPost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## OverworkPost (object)
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` - 用户ID
++ userName: `小强` (string) - 用户名称
++ beganDate: `2017-02-27` (string) - 开始日期
++ beganTime: `19:00:00` (string) - 加班开始时间
++ endTime: `23:00:00` (string) - 加班结束时间
++ overTime: `2400` (string) - 加班时常，单位秒
++ registTime: `18:00:00` (string) - 记录时间
++ remark: `备注` (string) - 备注
++ status: `1` (string) - 加班记录，是否已确认(1未确认，2已确认)
+
+## Overwork (OverworkPost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## AttRecordPost (object)
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 用户ID
++ deviceID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 设备ID
++ signDate: `2017-02-27` (string) - 打卡日期
++ signTime: `09:00:00` (string) - 打卡时间
++ type: `2` (string) - 签到类型（默认设备签到1，2为补签）
++ remark: `备注` (string) - 备注
+
+## AttRecord (AttRecordPost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
+
+## WhiteList (object)
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 用户ID
++ userName: `小强` (string) - 用户名称
+
+## AttReportForm (object)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - ID
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 用户ID
++ userName: `小强` (string) - 用户名称
++ employeeID: `88888` (string) - 工号
++ organizationID: `1c540b14-af8a-11e6-a806-0242ac13000a` (string) - 机构ID
++ organizationName: `圣点科技` (string) - 机构名称
++ positionID: `1c540b14-af8a-11e6-a806-0242ac13000a` - 岗位ID
++ positionName: `后端开发` (string) - 岗位名称
++ workTime: `64800` (string) - 总工作时长（时间单位：秒）
++ beganAM: `32400` (string) - 上午上班打卡时间
++ beganStatusAM: `1` (string) - 上午上班打卡状态(1为正常，2为迟到，3为早退，4为漏打卡，5为异常)
++ beganRemarkAM: `备注` (string) - 备注
++ endAM: `40000` (string) - 上午下班打卡时间
++ endStatusAM: `1` (string) - 上午下班打卡状态(1为正常，2为迟到，3为早退，4为漏打卡，5为异常)
++ endRemarkAM: `备注` (string) - 上午下班补签备注
++ beganPM: `42400` (string) - 下午上班打卡时间
++ beganStatusPM: `4` (string) - 下午上班打卡状态(1为正常，2为迟到，3为早退，4为漏打卡，5为异常)
++ beganRemarkPM: `备注` (string) - 下午上班补签备注
++ endPM: `64800` (string) - 下午下班打卡时间
++ endStatusPM: `1` (string) - 下午下班打卡状态(1为正常，2为迟到，3为早退，4为漏打卡，5为异常)
++ endRemarkPM: `备注` (string) - 下午下班补签备注
++ day: `2017-02-27` (string) - 考勤日期
++ dayType: `1` (string) - 日期类型（1工作日，2休假日）
++ egressStatusAM: `2` (string) - 上午外出状态(1为正常，2为异常)
++ egressStatusPM: `2` (string) - 下午外出状态(1为正常，2为异常)
++ egressRemark: `备注` (string) - 外出备注
++ errandStatusAM: `2` (string) - 上午出差状态(1为正常，2为异常)
++ errandStatusPM: `2` (string) - 下午出差状态(1为正常，2为异常)
++ errandRemark: `备注` (string) - 出差备注
++ leaveStatusAM: `2` (string) - 上午请假状态(1为正常，2为异常)
++ leaveStatusPM: `2` (string) - 下午请假状态(1为正常，2为异常)
++ leaveRemark: `备注` (string) - 请假备注
++ compTimeStatusAM: `2` (string) - 上午调休状态(1为正常，2为异常)
++ compTimeStatusPM: `2` (string) - 下午调休状态(1为正常，2为异常)
++ compTimeRemark: `备注` (string) - 调休备注
++ neglectWorkStatusAM: `2` (string) - 上午旷工状态(1为正常，2为异常)
++ neglectWorkStatusPM: `2` (string) - 下午旷工状态(1为正常，2为异常)
++ neglectWorkRemark: `备注` (string) - 旷工备注
++ overWork (Overwork) - 加班情况
+
+## AttStatisticsForm (object)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` - ID
++ userID: `1c540b14-af8a-11e6-a806-0242ac13000a` - 用户ID
++ userName: `小强` (string) - 用户名称
++ employeeID: `88888` (string) - 工号
++ organizationID: `1c540b14-af8a-11e6-a806-0242ac13000a` - 机构ID
++ organizationName: `圣点科技` - 机构名称
++ positionID: `1c540b14-af8a-11e6-a806-0242ac13000a` - 岗位ID
++ positionName: `后端开发` - 岗位名称
++ lateCount: `3` (number) - 迟到次数
++ earlyCount: `2` (number) - 早退次数
++ omitCount: `2` (number) - 漏打卡次数
++ egressCount: `2` (number) - 外出天数
++ errandCount: `1` (number) - 出差天数
++ leaveCount: `1` (number) - 请假天数
++ overWorkCount: `2` (number) - 加班次数
++ neglectWorkCount: `4.5` (number) - 旷工天数
++ compTimeCount: `4` (number) - 调休天数
+
+## PopularRulePost (object)
++ name: `测试规则` (string) - 规则名称
++ cutTime: `03:00:00` (string) - 切日时间
++ BeganAM: `09:00:00` (string) - 上午上班打卡时间
++ EndAM: `13:00:00` (string) - 上午下班打卡时间
++ BeganPM: `14:00:00` (string) - 下午上班打卡时间
++ EndPM: `16:00:00` (string) - 下午下班打卡时间
++ type: `1` (string) - 是否支持中午签到（1支持，2不支持，默认为2）
++ lateTime: `600` (string) - 晚到多久算迟到（时间单位：秒）
++ earlyTime: `600` (string) - 早退多久算早退（时间单位：秒）
++ overTime: `3000` (string) - 工作超过多久算加班（时间单位：秒）
++ remindTime: `600` (string) - 未打卡多久后提醒（时间单位：秒）
++ targetType: `all` (string) - 实体类型，all全体/organization机构/position岗位/workgroup工作组/mumber员工
++ targetID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - 实体ID
++ deviceList (array[string]) - 设备集合
++ weight: `3` (string) - 权重（权重越大，那么优先级越高）
++ status: `2` (string) - 规则是否启用，未启用为1，启用为2
+
+## PopularRule (PopularRulePost)
++ id: `1c540b14-af8a-11e6-a806-0242ac13000a` - ID
+
+## PadPerson (object)
++ appID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - PADID
++ secret: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - PAD秘钥
++ equipmentID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - PAD机器编码
++ person (object) - 人员信息
+    + name: `武嫚嫚` (string) - 考试人员姓名
+    + sex: `2` (string) - 性别
+    + nation: `汉` (string) - 名族
+    + birthday: `1988-08-27` (string) - 出生年月
+    + idcardPhotoURI: `/9j......` (string) - 身份证照片
+    + idcardNumber: `620828198808080808` (string) - 身份证号
+    + idcardStart: `2014-08-25` (string) - 身份证有效期开始日期
+    + idcardEnd: `2024-08-25` (string) - 身份证有效期截止日期
+    + idcardVisaplace: `会宁县公安局` (string) - 签发机关
+    + address: `甘肃省会宁县驿镇` (string) - 住址
+    + features (array) - 指静脉信息
+        + (object)
+            + finger: `l2` (string) - 手指
+            + feature: `Zcas/asf....` (string) - 指静脉信息
+
+## ExamPerson (ExamPersonPost)
++ id: `cde5b5b5-fa64-11e6-a603-0242ac120006`(string) - uuid
++ etag: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - etag标识
+
+## ExamPersonPost (object)
++ idcard: `620523198808272003` (string) - 身份证号
++ name: `武嫚嫚` (string) - 考试人员姓名
++ sex: `2` (string) - 性别
++ nation: `汉` (string) - 名族
++ birthday: `1988-08-27` (string) - 出生年月
++ idcardStartDate: `2014-08-25` (string) - 身份证有效期开始日期
++ idcardEndDate: `2024-08-25` (string) - 身份证有效期截止日期
++ visaplace: `会宁县公安局` (string) - 签发机关
++ idcardAddress: `甘肃省会宁县郭城驿镇驮营村辽坡社６５号２室` (string) - 住址
++ idcardPhotoURI: `/9j......` (string) - 身份证照片
++ photoURI: `sfa-saf.jpg` (string) - 照片地址
++ idcardCredibility: true (boolean) - 身份证可信度
++ employeeID: `A0001` (string) - 工号
++ cellphone: `13347420900` (string) - 联系电话
++ category: `**公司` (string) - 公司 
++ extraProp (array[ExtraPropInfo]) - 人员扩展信息
++ features (array[PersonFeature]) - 指静脉信息
+
+## ExtraPropInfo (object)
++ propID: `014da663-d25f-11e6-ba40-0242ac120006` (string) - 考试人员信息扩展项id
++ value: `1` (string) - 扩展项的值
+
+## ExtraProp (object)
++ id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - uuid
++ name: `持证类型` (string, required) - 扩展项名称
++ type: `bool/string/number` (string) - 类型
++ desc: `****` (string) - 暂时预留
++ width: `25` (number) - 长度
++ format: `****` (string) - 暂时预留
+
+## Subject (object)
++ id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - uuid
++ name: `电工考试` (string, required) - 科目名称
++ maximun: `100.00` (number, required) - 类型
++ borderline: `60.00` (number, required) - 分数线
++ remark: `考查电力基础` (string) - 备注
+
+## Room (object)
++ id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - uuid
++ name: `A02考场` (string, required) - 名称
++ maxStudentLimit: `60` (number, required) - 最大容纳人数
++ address: `办公楼一楼A02机房` (string, required) - 位置
+
+## Examination (object)
++ id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - uuid
++ name: `201700203电工考场` (string, required) - 名称
++ subjectID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 考试科目ID
++ roomID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 考场ID
++ date: `2017-02-03` (string, required) - 考试日期
++ period: `08:00-10:00` (string, required) - 考试时间
++ sdInfo (array[Sdinfo]) - 考生信息
++ devicesID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (array[string]) - 设备集合
++ archiveFlag: `1` (string, required) - 考试是否归档
+
+## Sdinfo (object)
++ sdID: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - 考试人员ID
++ score: `75`(number) - 考试成绩
++ verifyFlag: `2` (string) - 签到状态
++ verifyTime: `2017-02-15 15:00:05` (string) - 签到时间
++ status: `2` (string) - 是否交卷
+
+## ExaminationPost (object)
++ name: `201700203电工考场` (string, required) - 名称
++ subjectID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 考试科目ID
++ roomID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 考场ID
++ date: `2017-02-03` (string, required) - 考试日期
++ period: `08:00-10:00` (string, required) - 考试时间
++ sdInfo: `cde5b5b5-fa64-11e6-a603-0242ac120006` (array[string]) - 开始人员ID集合
++ devicesID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (array[string]) - 设备集合
++ archiveFlag: `1` (string, required) - 考试是否归档
+
+## Examrecord (object)
++ recordID: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - uuid
++ appID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 设备ID
++ deviceName: `考试设备` (string, required) - 设备名称
++ secret: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 设备秘钥
++ personID: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - 人员ID
++ personName: `张瑞瑞` (string, required) - 人员姓名
++ time: `2017-02-03 08:00:15` (string, required) - 验证时间
+
+## Examrecordpost (object)
++ appID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 设备ID
++ secret: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 设备秘钥
++ personID: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - 人员ID
++ time: `2017-02-03 08:00:15` (string, required) - 验证时间
+
+## Position (PositionPost)
++ id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 岗位ID
+
+## PositionPost (object)
++ name: `总经理` (string, required) - 岗位名称
++ order: `0` (number, required) - 序号
++ description: `公司领导` (string) - 岗位描述
+
+## Workgroup (WorkgroupPost)
++ id:`61908d7a-fc98-11e6-9e9a-0242ac120009` (string) - 工作组ID
+
+## WorkgroupPost (object)
++ name:`研发中心` (string, required) - 工作组名称
++ description:`负责产品研发` (string) - 工作组描述
+
+## EUser (EUserPost)
++ id: `cfa01ac0-fc8d-11e6-a603-0242ac120006` (string) - 人员uuid
++ features (array[PersonFeature]) - 指静脉信息
+## EUserPost
++ name: `李磊` (string) - 姓名
++ employeeid: `A0006` (string) - 工号
++ organizationid: `017553a1-fa65-11e6-a933-0242ac120009` (string) - 组织ID
++ positionid: `57074aa0-fc98-11e6-9e9a-0242ac120009` (string) - 岗位ID
++ workgroupid (array[string]) - 工作组ID列表
+    + `61908d7a-fc98-11e6-9e9a-0242ac120009`
++ idcard: `610101199111118888` (string) - 身份证号
++ sexcd: `1` (string) - 性别
++ birthday: `2017-01-01` (string) - 出生年月
++ cellphone: `029-8675564` (string) - 电话
++ cardID: `2387381324` (string) - 卡号
++ telephone: `13888888888` (string) - 手机
++ email: `122@qq.com` (string) - 邮箱
++ attendanceStart: `2017-02-27` (string) - 考勤开始日期
++ attendanceEnd: `-` (string) - 考勤截止日期
++ isLeave: `1` (string) - 是否已离职标识
+
+## Error400 (object)
++ error
+    code: `BadArgument` (string) - 代码
+    message: `xxx is invalid` (string) - 原因
+
+# Group 核心 core
+
+核心模块负责提供所有的人员和设备接口，以及所有指静脉相关的操作。  
+核心模块大部分功能通过rabbitmq调用，少量RESTful API为web管理页面使用。
+
+## 验证 auth [/core]
+
+* 目前只有管理员可以登录，将来也可以扩展到任意普通用户。
+* 考虑到未来兼容，管理员依然叫 user
+* 新建管理员需要调用下述的人员接口，管理员也在人员中统一管理。
+* Tocken过期为三天，刷新时间为七天。
+### 登录 [POST /core/login]
+
+* 使用用户名和密码换取一个Token。
+* 使用方式：在请求Header中声明 "Authorization:Bearer xxx.xxx.xxx"
+* payload 中的授权格式为 {"system1":"admin","system2":"user"} key为系统，值为普通用户或管理员
+
++ Attributes(object)
+    + username: `admin` (string, required) - 可以是管理员名，身份证号，电话，工号，卡号中的一个
+    + password: `admin` (string, required) - 密码
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Attributes(object)
+        + token: `xxx.xxx.xxx` (string) - jwt
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+### 刷新 [GET /core/refresh_token]
+
+* 使用旧的Token换取一个新Token。
+* 使用方式：在请求Header中声明 "Authorization:Bearer xxx.xxx.xxx"
+
+
++ Response 200 (application/json)
+    + Attributes(object)
+        + token: `xxx.xxx.xxx` (string) - jwt
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+
+### 获取所有用户 [GET /core/users]
+
+获得所有能登录的系统用户
+
++ Response 200 (application/json)
+    + Attributes(array[User])
+
+### 获取一个指定用户 [GET /core/users/{id}]
+
+获取指定id的用户。
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - person id
+
++ Response 200 (application/json)
+    + Attributes(User)
+
++ Response 404
+
+### 创建一个用户 [POST /core/users]
+
+创建一个可以登录的系统用户，需要指定管理员名，身份证号，电话，工号，卡号中的一个
+
++ Attributes(UserPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /core/users/0b4d4400-b78c-11e6-b23a-0242ac140009
+
+    + Attributes(User)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 修改一个用户 [PUT /core/users/{id}]
+
+修改一个用户。
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(UserPost)
+    
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Attributes(User)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改用户密码 [POST /core/user/passwordchange]
+
+修改用户密码，用户需要修改自身密码时使用。超级管理员可以通过修改用户修改用户密码。
+
++ Attributes(object)
+    + oldPassword: `123456` (string, required) - 旧密码
+    + newPassword: `654321` (string, required) - 新密码
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 获取当前用户 [GET /core/user/current]
+
+获取当前用户
+
++ Response 200 (application/json)
+    + Attributes(User)
+
++ Response 401
+
+### 修改用户权限 [POST /core/user/privileges]
+
+只是修改一个用户的权限
+
++ Attributes(object)
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+    + privileges - 权限列表
+        + access: `admin` (string) - 系统和权限
+        + payment: `admin` (string) - 系统和权限
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 人员 person [/core/persons]
+
+* 核心负责统一管理指静脉生态的人员，发行一个人员id必须经过核心。
+* 各业务模块同步自己所需的人员，扩充自己所需的字段。
+* 同步部分在队列系统中。人员改动会向主题发布，也有整体同步的选项供每日检查。
+* 新建人员时，向核心提出申请，核心根据申请信息创建一个人员或者返回一个匹配的已存在人员。
+* 修改人员的核心属性时，也必须向核心提出请求，否则未同步的修改会在同步时被覆盖。
+* 删除人员时，业务系统进行软删除，冻结人员信息，不再同步。创建人员时若发现核心返回的id为已删除人员，可以进行覆盖。
+* 备份人员时，传入id是备份一条数据，不传入id是所有数据备份，备份打包为.gz压缩文件。
+* 恢复人员时，使用form-data上传.gz压缩文件。
+### 获取所有人员 [GET]
+
+获取所有人员，有分页。
+
++ Response 200 (application/json)
+    + Attributes(array[Person])
+
+### 获取一个指定人员 [GET /core/persons/{id}]
+
+获取指定id的人员。
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Headers
+    
+            Etag: 6fc5c5f5-9838-4edc-a21d-a5df37f17d5f
+        
+    + Attributes(Person)
+    
+    + Body
+
++ Response 404
+
+### 申请创建一个人员 [POST /core/persons]
+
+这是唯一创建人员的方式。核心会检查是否存在这个人，存在则返回，不存在则创建并返回。  
+得到结果后应用应检查这个人是否是本地应用曾经软删除的人，如果是删除过的则硬删除后插入返回的新人员。  
+另外，核心还会检查身份证号/工号/电话/卡号是否有冲突，比如请求包含身份证号，在核心找到此人，
+但是请求的电话号被核心其他人员使用，则会返回一个错误。  
+创建逻辑如下：
+
+* 无身份证号，工号，电话和卡号，直接返回400错误。
+* 若请求包含身份证号
+    - 若身份证号在核心不存在
+        - 若不包含工号和电话以及卡号，则新建用户并返回。
+        - 其他情况什么都不做，自动跳到下一步。
+    - 若身份证号在核心存在
+        - 若核心身份证可信请求不可信，更新身份证外信息后返回。
+        - 其他情况，更新所有信息后返回。
+* 若请求包含工号
+    - 若工号在核心不存在
+        - 若不包含电话和卡号，则新建用户并返回。
+        - 其他情况什么都不做，自动跳到下一步。
+    - 若工号在核心存在
+        - 若核心身份证可信，则更新身份证以外信息后返回。
+        - 若核心身份证不可信，更新所有信息后返回。
+* 若请求包含电话
+    - 若电话在核心不存在
+        - 若不包含卡号，则新建用户并返回。
+        - 其他情况什么都不做，自动跳到下一步。
+    - 若电话在核心存在
+        - 若核心身份证可信，则更新身份证以外信息后返回。
+        - 若核心身份证不可信，更新所有信息后返回。
+* 若请求包含卡号
+    - 若卡号在核心不存在，则新建用户并返回。
+    - 若卡号在核心存在
+        - 若核心身份证可信，则更新身份证以外信息后返回。
+        - 若核心身份证不可信，更新所有信息后返回。
+
+
++ Attributes(PersonPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+    
+            Location: /persons/0b4d4400-b78c-11e6-b23a-0242ac140009
+            Etag: 6fc5c5f5-9838-4edc-a21d-a5df37f17d5f
+    
+    + Attributes(Person)
+
++ Response 200 (application/json)
+
+    + Headers
+    
+            Location: /persons/0b4d4400-b78c-11e6-b23a-0242ac140009
+            Etag: 6fc5c5f5-9838-4edc-a21d-a5df37f17d5f
+    
+    + Attributes(Person)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 修改一个人员 [PUT /core/persons/{id}]
+
+修改参考新增逻辑，注意只有可信的身份证信息才能更新可信的身份证。
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(PersonPost)
+    
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Etag: 6fc5c5f5-9838-4edc-a21d-a5df37f17d5f
+
+    + Attributes(Person)
+    
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 同步有更改的人员 [POST /core/person/sync]
+
+同步人员供应用的人员同步校对程序定时使用。
+应用提供需要同步的所有人员的etag，核心返回所有更改的和新增的人员。
+发送的人员不应包含应用中已删除的人员。
+
+
++ Attributes
+    + snapshot (array)
+        + (object)
+            + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - uuid
+            + etag: `6fc5c5f5-9838-4edc-a21d-a5df37f17d5f` (string) - etag
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Attributes(array[Person])
+
+### 寻找一个人员 [GET /core/person/find{?idcard,employeeID,cellphone}]
+
+通过身份证号，工号，或者电话来搜索一个人员是否存在。供应用某些场景查询。
+
++ Parameters
+    + idcard: `610102198408290319` ( string , optional ) - 身份证号
+    + employeeID: `00001` ( string , optional ) - 工号
+    + cellphone: `18611184528` ( string , optional ) - 中国手机号
+
++ Response 200 (application/json)
+    + Attributes (Person)
+
++ Response 404
+
+### 搜索人员 [GET /core/person/search{?keyword}]
+
+通过任何关键信息搜索人员，返回一个符合要求的列表。有分页，默认十条。
+
++ Parameters
+    + keyword: `小明` ( string , required ) - 关键字
+    
++ Response 200 (application/json)
+    + Attributes (array[Person])
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 备份人员 [GET /core/person/backup{?id}]
+
+通过id关键字备份人员，返回json数据的gz压缩文件。如果不传id，默认备份所有人员数据
+
++ Parameters
+    + id: `0ff452fa-047c-11e7-8e6a-0242ac120011` ( string , required ) - 关键字
+    
++ Response 200 (application/x-gzip)
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+   
+### 恢复人员 [POST /core/person/restore]
+
+使用form-data上传备份文件
+
++ Response 200 (application/json)
++ Response 400 (application/json)
+    + Attributes(Error400)
+## 特征 feature [/core/features]
+
+指静脉特征，API部分只有同步接口，此接口提供给全部离线设备调用。
+
+### 获取一个指静脉特征 [GET /core/features/{id}]
+
+获取指定 id 的指静脉特征
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(Feature)
+
++ Response 404
+
+### 删除一个指静脉特征 [DELETE /core/features/{id}]
+
+删除特征，会向验证程序通知。
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 204
+
+
+## 设备 device [/core/devices]
+
+* 设备由核心统一管理，业务系统一般只需要同步自己需要的设备。
+* 业务系统可对同步的设备自行扩充业务属性。
+
+### 获取所有设备 [GET /core/devices{?typeCD}]
+
+获取所有设备，没有分页。
+
++ Parameters
+    + typeCD: `3` (string, optional) - 分类
+
++ Response 200 (application/json)
+    + Attributes(array[Device])
+
+### 获取一个指定设备 [GET /core/devices/{id}]
+
+获取指定id的设备。
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Headers
+    
+            Etag: 6fc5c5f5-9838-4edc-a21d-a5df37f17d5f
+        
+    + Attributes(Device)
+    
+    + Body
+
++ Response 404
+
+
+### 新增一个设备 [POST]
+
+只有核心管理页面会调用此接口，这是新增设备的唯一途径。
+
++ Attributes(DevicePost)
+    
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /devices/0b4d4400-b78c-11e6-b23a-0242ac140009
+            Etag: 6fc5c5f5-9838-4edc-a21d-a5df37f17d5f
+
+    + Attributes(Device)
+    
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个设备 [PUT /core/devices/{id}]
+
+只有核心管理页面会调用此接口，这是修改设备的唯一途径。
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(DevicePost)
+    
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Etag: 6fc5c5f5-9838-4edc-a21d-a5df37f17d5f
+
+    + Attributes(Device)
+    
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 删除一个设备 [DELETE /core/devices/{id}]
+
+会在设备名称后加（已删除）并做软删除，以避免无效引用。
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 204
+
+### 同步有更改的设备 [POST /core/device/sync]
+
+同步设备供应用的设备同步校对程序定时使用。
+应用提供需要同步的设备类型和本地所有设备的etag，核心返回所有更改的和新增的设备。
+删除的设备以修改删除状态呈现。
+
++ Attributes
+    + types: 1,2 (array[string]) - 设备类型列表
+    + snapshot (array)
+        + (object)
+            + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - uuid
+            + etag: `6fc5c5f5-9838-4edc-a21d-a5df37f17d5f` (string) - etag
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Attributes(array[Device])
+
+### 搜索设备 [GET /core/device/search{?keyword}]
+
+通过任何关键信息搜索人设备，返回一个符合要求的列表。有分页，默认十条。
+
++ Parameters
+    + keyword: `大门` ( string , required ) - 关键字
+    
++ Response 200 (application/json)
+    + Attributes (array[Device])
+
+
+# Group 企业 enterprise
+
+负责企业内部的组织结构和人员管理
+
+## 组织机构 organization [/organizations]
+ 
+### 创建一个组织机构 [POST /organizations]
+根据企业情况创建组织机构
++ Attributes(OrganizationPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Organization)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询指定的组织机构 [GET /organizations/{id}]
+根据组织ID查询指定组织机构
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 组织ID
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Organization)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询所有组织机构 [GET /organizations]
+查询所有组织机构
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(array[Organization])
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个组织机构 [PUT /organizations/{id}]
+根据组织ID修改指定组织机构
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 组织ID
++ Attributes(OrganizationPost)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Organization)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 删除指定组织机构 [DELETE /organizations/{id}]
+根据ID删除组织机构
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 组织ID
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 岗位 positions [/positions]
+### 创建一个岗位 [POST /positions]
+根据企业情况创建岗位
++ Attributes(PositionPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Position)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询指定的岗位 [GET /positions/{id}]
+根据岗位ID查询指定岗位
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 岗位ID
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Position)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询所有岗位 [GET /positions]
+查询所有岗位
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(array[Position])
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个岗位 [PUT /positions/{id}]
+根据岗位ID修改指定岗位
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 岗位ID
++ Attributes(PositionPost)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Position)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 删除指定岗位 [DELETE /positions/{id}]
+根据ID删除岗位
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 岗位ID
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+## 工作组 workgroups [/workgroups]
+
+### 创建一个工作组 [POST /workgroups]
+根据企业情况创建工作组
++ Attributes(WorkgroupPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Workgroup)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询指定的工作组 [GET /workgroups/{id}]
+根据工作组ID查询指定工作组
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 工作组ID
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Workgroup)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询所有工作组 [GET /workgroups]
+查询所有工作组
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(array[Workgroup])
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个工作组 [PUT /workgroups/{id}]
+根据工作组ID修改指定工作组
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 工作组ID
++ Attributes(WorkgroupPost)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Workgroup)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 删除指定工作组 [DELETE /workgroups/{id}]
+根据ID删除工作组
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 工作组ID
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询指定的工作组下的人员 [GET /workgroups/{id}/members]
+根据工作组ID查询指定的工作组下的人员
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 工作组ID
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(array[EUser])
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 移除指定的工作组下的指定人员 [DELETE /workgroups/{id}/delusers]
+移除指定的工作组下的指定人员
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 工作组ID
++ Attributes(object)
+    + userid: `cfa01ac0-fc8d-11e6-a603-0242ac120006` (string, required) - 人员ID
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 给指定的工作组下的增加人员 [POST /workgroups/addusers{?workgroupid}]
+给指定的工作组下增加人员
++ Parameters
+    + workgroupid: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 工作组ID
++ Attributes(array[string])
+    + `cfa01ac0-fc8d-11e6-a603-0242ac120006` (string) - 人员ID
+    + `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 人员ID
++ Request (application/json)
+
++ Response 201 (application/json)
+    + Attributes(object)
+        + userid: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 人员ID
+        + workgroupid: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string) - 工作组ID
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 企业人员 users [/users]
+### 创建一个企业人员 [POST /users]
++ Attributes(EUserPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(EUser)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询指定的企业人员 [GET /users/{id}]
+根据企业人员ID查询指定企业人员
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 企业人员ID
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(EUser)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询所有企业人员 [GET /users{?organizationid,positionid,workgroupid,recursive,userName,isleave,userList,active,len}]
+查询所有企业人员，有分页，有过滤：组织ID，岗位ID，工作组ID，是否查询子机构人员，企业人员姓名，企业人员是否离职，人员ID列表
++ Parameters
+    + organizationid: `7bbaf364-f2ca-11e6-9e9a-0242ac120009` (string, optional) - 组织ID
+    + positionid: `7bbaf364-f43a-11e6-9e9a-0242ac120009` (string, optional) - 岗位ID
+    + workgroupid: `7bbaf364-f7ca-11e6-9e9a-0242ac120009` (string, optional) - 工作组ID
+    + recursive: `1` (string, optional) - 是否查询子机构人员
+    + userName: `张三` (string, optional) - 企业人员姓名
+    + isleave: `1` (string, optional) - 企业人员是否离职
+    + userList (array[string], optional) - 人员ID列表
+        + `7bbaf364-fcca-11e6-999a-0242ac120009` - 企业人员ID
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (strifining, optional) - 当前页数据量
++ Response 200 (application/json)
+
+    + Headers
+    
+            X-Total-Count: `1`
+    + Attributes(array[EUser])
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个企业人员 [PUT /users/{id}]
+根据企业人员ID修改指定企业人员
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 企业人员ID
++ Attributes(EUserPost)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(EUser)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 删除指定企业人员 [DELETE /users/{id}]
+根据ID删除企业人员
++ Parameters
+    + id: `7bbaf364-fcca-11e6-9e9a-0242ac120009` (string, required) - 企业人员ID
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 导出企业人员 [GET /user{?organizationid,positionid,workgroupid,recursive,userName,isleave,userList}]
+导出企业人员
++ Parameters
+    + organizationid: `7bbaf364-f2ca-11e6-9e9a-0242ac120009` (string, optional) - 组织ID
+    + positionid: `7bbaf364-f43a-11e6-9e9a-0242ac120009` (string, optional) - 岗位ID
+    + workgroupid: `7bbaf364-f7ca-11e6-9e9a-0242ac120009` (string, optional) - 工作组ID
+    + recursive: `1` (string, optional) - 是否查询子机构人员
+    + userName: `张三` (string, optional) - 企业人员姓名
+    + isleave: `1` (string, optional) - 企业人员是否离职
+    + userList (array[string], optional) - 人员ID列表
+        + `7bbaf364-fcca-11e6-999a-0242ac120009` - 企业人员ID
++ Request (application/json)
+
++ Response 200 (application/xls)
+
+# Group 门禁 access
+
+## 打卡记录 dealrecords [/access/records]
+
+* 用户打卡记录，只具备查看功能
+
+### 检索所有打卡记录 [GET /access/records{?reportformid,userName,employeeID,orgID,positionID,deviceID,areaID,beganDate,endDate,beganTime,endTime,type,active,len}]
+
++ Parameters
+    + reportformid: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 报表ID
+    + userName: `小强` - 用户名
+    + employeeID: `8888` (string,optional) - 工号
+    + orgID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 机构ID
+    + positionID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 岗位ID
+    + deviceID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 岗位ID
+    + areaID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 岗位ID
+    + beganDate: `2006-01-02` (string,optional) - 开始日期
+    + endDate: `2006-01-02` (string,optional) - 结束日期
+    + beganTime: `09:00:00` (string,optional) - 开始时间
+    + endTime: `18:00:00` (string,optional) - 结束时间
+    + type: `1` (string,optional) - 进出门类型，1进门/2出门
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[AccRecord])
+
+## 规则 rules [/access/rules]
+
+### 获取所有规则信息 [GET /access/rules{?status}]
+
+获取所有规则
+
++ Parameters
+    + status: `1` (string, optional) - 规则状态。1关闭/2开启
+
++ Response 200 (application/json)
+    + Attributes(array[Access])
+
+
+### 获取一个规则信息 [GET /access/rules/{id}]
+
+根据ID获取一个规则信息
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(Access)
+
++ Response 404
+
+
+### 创建一个规则 [POST /access/rules]
+
++ Attributes(AccessPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Access)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个规则信息 [PUT /access/rules/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(AccessPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Access)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+### 开启/关闭一个规则 [PATCH /access/rules/{id}/switch]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Access)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除一个规则 [DELETE /access/rules/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+## reportform [/access/reportform]
+
+### 获取一个打卡报表 [GET /access/reportform/{id}]
+
+根据ID获取一个打卡报表
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(AccessReportForm)
+
++ Response 404
+
+
+### 创建一个打卡报表 [POST /access/reportform]
+
++ Attributes(AccessReportFormPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(AccessReportForm)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 删除一个打卡报表 [DELETE /access/reportform/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+# Group 考勤 attendance
+
+## 考勤记录 records [/attendance/records]
+
+### 检索所有考勤记录 [GET /attendance/records{?userID,deviceID,beganDate,endDate,beganTime,endTime,type,active,len}]
+
+检索所有考勤记录，有分页。
+
++ Parameters
+    + userID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 账户ID
+    + deviceID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 设备ID
+    + beganDate: `2006-01-02` (string,optional) - 开始时间
+    + endDate: `2006-01-02` (string,optional) - 结束时间
+    + beganTime: `09:00:00` (string,optional) - 开始时间
+    + endTime: `18:00:00` (string,optional) - 结束时间
+    + type: `1` (string,optional) - 签到类型，1为机器打卡，2为补签
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[AttRecord])
+
+
+### 补签 [POST /attendance/records]
+
++ Attributes(AttRecordPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(AttRecord)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+## 考勤规则 popularrules [/attendance/popularrules]
+
+### 获取所有考勤规则信息 [GET /attendance/popularrules]
+
+获取所有考勤规则
+
++ Response 200 (application/json)
+    + Attributes(array[PopularRule])
+
+
+### 获取一个考勤规则信息 [GET /attendance/popularrules/{id}]
+
+根据ID获取一个考勤规则信息
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(PopularRule)
+
++ Response 404
+
+
+### 创建一个考勤规则 [POST /attendance/popularrules]
+
++ Attributes(PopularRulePost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(PopularRule)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个考勤规则信息 [PATCH /attendance/popularrules/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(PopularRulePost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(PopularRule)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除一个考勤规则 [DELETE /attendance/popularrules/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 节假日 holidays [/attendance/holidays]
+
+### 获取所有节假日信息 [GET /attendance/holidays]
+
+获取所有节假日
+
++ Response 200 (application/json)
+    + Attributes(array[Holiday])
+
+### 创建一个节假日 [POST /attendance/holidays]
+
++ Attributes(HolidayPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Holiday)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个节假日 [PATCH /attendance/holidays/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(HolidayPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Holiday)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除一个节假日 [DELETE /attendance/holidays/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 外出 egresses [/attendance/egresses]
+
+### 获取所有外出信息 [GET /attendance/egresses{?userID,beganDate,endDate,active,len}]
+
++ Parameters
+    + userID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 用户ID
+    + beganDate: `2006-01-02` (string,optional) - 开始日期
+    + endDate: `2006-01-02` (string,optional) - 结束日期
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[Egress])
+
+
+### 获取一个外出信息 [GET /attendance/egresses/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(Egress)
+
++ Response 404
+
+
+### 创建一个外出 [POST /attendance/egresses]
+
++ Attributes(EgressPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Egress)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个外出 [PUT /attendance/egresses/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(EgressPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Egress)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除一个外出 [DELETE /attendance/egresses/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+## 出差 errands [/attendance/errands]
+
+### 获取所有出差信息 [GET /attendance/errands{?userID,beganDate,endDate,active,len}]
+
++ Parameters
+    + userID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 用户ID
+    + beganDate: `2006-01-02` (string,optional) - 开始日期
+    + endDate: `2006-01-02` (string,optional) - 结束日期
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[Errand])
+
+
+### 获取一个出差信息 [GET /attendance/errands/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(Errand)
+
++ Response 404
+
+
+### 创建一个出差 [POST /attendance/errands]
+
++ Attributes(ErrandPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Errand)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个出差 [PUT /attendance/errands/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(ErrandPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Errand)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除一个出差 [DELETE /attendance/errands/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+## 请假 leaves [/attendance/leaves]
+
+### 获取所有请假信息 [GET /attendance/leaves{?userID,beganDate,endDate,active,len}]
+
++ Parameters
+    + userID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 用户ID
+    + beganDate: `2006-01-02` (string,optional) - 开始日期
+    + endDate: `2006-01-02` (string,optional) - 结束日期
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[Leave])
+
+
+### 获取一个请假信息 [GET /attendance/leaves/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(Leave)
+
++ Response 404
+
+
+### 创建一个请假 [POST /attendance/leaves]
+
++ Attributes(LeavePost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Leave)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个请假 [PUT /attendance/leaves/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(LeavePost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Leave)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除一个请假 [DELETE /attendance/leaves/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 调休 comptimes [/attendance/comptimes]
+
+### 获取所有调休信息 [GET /attendance/comptimes{?userID,beganDate,endDate,active,len}]
+
++ Parameters
+    + userID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 用户ID
+    + beganDate: `2006-01-02` (string,optional) - 开始日期
+    + endDate: `2006-01-02` (string,optional) - 结束日期
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[CompTime])
+
+
+### 获取一个调休信息 [GET /attendance/comptimes/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(CompTime)
+
++ Response 404
+
+
+### 创建一个调休 [POST /attendance/comptimes]
+
++ Attributes(CompTimePost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(CompTime)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个调休 [PUT /attendance/comptimes/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(CompTimePost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(CompTime)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除一个调休 [DELETE /attendance/comptimes/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 旷工 neglectworks [/attendance/neglectworks]
+
+### 获取所有旷工信息 [GET /attendance/neglectworks{?userID,beganDate,endDate,active,len}]
+
++ Parameters
+    + userID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 用户ID
+    + beganDate: `2006-01-02` (string,optional) - 开始日期
+    + endDate: `2006-01-02` (string,optional) - 结束日期
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[Neglectwork])
+
+
+### 获取一个旷工信息 [GET /attendance/neglectworks/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(Neglectwork)
+
++ Response 404
+
+
+### 创建一个旷工 [POST /attendance/neglectworks]
+
++ Attributes(NeglectworkPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Neglectwork)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个旷工 [PUT /attendance/neglectworks/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(NeglectworkPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Neglectwork)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除一个旷工 [DELETE /attendance/neglectworks/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 加班 overworks [/attendance/overworks]
+
+### 获取所有加班信息 [GET /attendance/overworks{?userID,beganDate,endDate,active,len}]
+
++ Parameters
+    + userID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 用户ID
+    + beganDate: `2006-01-02` (string,optional) - 开始日期
+    + endDate: `2006-01-02` (string,optional) - 结束日期
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[Overwork])
+
+
+### 获取一个加班信息 [GET /attendance/overworks/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(Overwork)
+
++ Response 404
+
+
+### 创建一个加班 [POST /attendance/overworks]
+
++ Attributes(OverworkPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Overwork)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个加班 [PUT /attendance/overworks/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(OverworkPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Overwork)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 确认/取消加班 [PATCH /attendance/overworks/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes
+    + status: `1` (string, required) - 加班记录，是否已确认(1未确认，2已确认)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Overwork)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除一个加班 [DELETE /attendance/overworks/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 动态报表 reportforms [/attendance/reportforms/dynamic]
+
+### 获取动态报表统计信息 [GET /attendance/reportforms/dynamic{?userName,month,positionID,orgID,active,len}]
+
++ Parameters
+    + userName: `小强` (string,optional) (string, optional) - 用户姓名
+    + month: `2006-01` (string,optional) (string, required) - 月份
+    + positionID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 岗位ID
+    + orgID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 机构ID
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[AttStatisticsForm])
+
+### 获取动态报表月份信息 [GET /attendance/reportforms/dynamic/month]
+
+返回年份月份集合，例如：2017-02
+
++ Response 200 (application/json)
+    + Attributes(array[string])
+
+### 获取动态报表统计信息 [GET /attendance/reportforms/dynamic/calendar{?userID,month}]
+
++ Parameters
+    + userID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 用户ID
+    + month: `2006-01` (string,required) - 月份
+
++ Response 200 (application/json)
+    + Attributes(array[AttReportForm])
+
+### 导出动态报表统计表格 [GET /attendance/reportforms/dynamic/statistics/xlsx{?userName,month,positionID,orgID}]
+
+返回excel文件
+
++ Parameters
+    + userName: `小强` (string,optional) (string, optional) - 用户姓名
+    + month: `2006-01` (string,optional) (string, required) - 月份
+    + positionID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 岗位ID
+    + orgID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 机构ID
+
++ Request (application/json)
+
++ Response 200 (application/xls)
+
+### 导出动态报表详细打卡表格 [GET /attendance/reportforms/dynamic/original/xlsx{?userName,month,positionID,orgID}]
+
+返回excel文件
+
++ Parameters
+    + userName: `小强` (string,optional) (string, optional) - 用户姓名
+    + month: `2006-01` (string,optional) (string, required) - 月份
+    + positionID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 岗位ID
+    + orgID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 机构ID
+
++ Request (application/json)
+
++ Response 200
+
+## 历史报表 reportforms [/attendance/reportforms]
+
+### 获取历史报表统计信息 [GET /attendance/reportforms{?userName,month,positionID,orgID,active,len}]
+
++ Parameters
+    + userName: `小强` (string,optional) (string, optional) - 用户姓名
+    + month: `2006-01` (string,optional) (string, required) - 月份
+    + positionID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 岗位ID
+    + orgID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 机构ID
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[AttStatisticsForm])
+
+### 获取历史报表月份信息 [GET /attendance/reportforms/month]
+
+返回年份月份集合，例如：2017-02
+
++ Response 200 (application/json)
+    + Attributes(array[string])
+
+### 获取历史报表统计信息 [GET /attendance/reportforms/calendar{?userID,month}]
+
++ Parameters
+    + userID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 用户ID
+    + month: `2006-01` (string,required) - 月份
+
++ Response 200 (application/json)
+    + Attributes(array[AttReportForm])
+
+### 归档历史报表统计信息 [POST /attendance/reportforms]
+
++ Attributes
+    + month: `2006-01` (string,required) - 月份
+
++ Response 201 (application/json)
+
+### 回归历史报表到动态报表 [DELETE /attendance/reportforms{?month}]
+
++ Parameters
+    + month: `2006-01` (string, required) - 月份
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 导出历史报表统计表格 [GET /attendance/reportforms/statistics/xlsx{?userName,month,positionID,orgID}]
+
+返回excel文件
+
++ Parameters
+    + userName: `小强` (string,optional) (string, optional) - 用户姓名
+    + month: `2006-01` (string,optional) (string, required) - 月份
+    + positionID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 岗位ID
+    + orgID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 机构ID
+
++ Request (application/json)
+
++ Response 200 (application/xls)
+
+### 导出历史报表详细打卡表格 [GET /attendance/reportforms/original/xlsx{?userName,month,positionID,orgID}]
+
+返回excel文件
+
++ Parameters
+    + userName: `小强` (string,optional) (string, optional) - 用户姓名
+    + month: `2006-01` (string,optional) (string, required) - 月份
+    + positionID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 岗位ID
+    + orgID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 机构ID
+
++ Request (application/json)
+
++ Response 200 (application/xls)
+
+
+# Group 访客 visitor
+## 访客 visitor [/visitor/visitors]
+
+* 访客，新建访客需要在core person中进行申请
+
+### 获取所有访客信息 [GET /visitor/visitors{?visitorName,company,begandate,enddate,active,len}]
+获取所有访客，有分页，过滤：访客姓名、来访人公司，最近访问日期
++ Parameters
+    + visitorName: `张三` (string, optional) - 访客姓名
+    + company: `**科技公司` (string, optional) - 公司名称
+    + begandate: `2017-02-07` (string, optional) - 最近访问时间起始日期
+    + enddate: `2017-02-07` (string, optional) - 最近访问时间截止日期
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(Visitors)
+
+
+### 获取指定访客信息 [GET /visitor/visitors/{id}]
+根据ID获取访客信息
++ Parameters
+    + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(Visitor)
+
++ Response 404
+
+
+### 创建访客 [POST /visitor/visitors]
+访客来访，建立访客
++ Attributes(VisitorPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Visitor)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改指定访客 [PUT /visitor/visitors/{id}]
+根据的访客ID修改指定访客
++ Parameters
+    + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - uuid
+
++ Attributes(VisitorPost)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Visitor)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除指定访客 [DELETE /visitor/visitors/{id}]
+根据访客ID删除访客
++ Parameters
+    + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 删除指定访客的指静脉信息 [PATCH /visitor/{id}/features]
+根据的访客ID修改指定访客
++ Parameters
+    + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - uuid
+
++ Attributes(array)
+    + l2
+    + l3
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Visitor)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 被访人 interviewee [/visitor/interviewees]
+* 被访人，获取被访人需要在企业里获取人员组织信息
+
+### 获取所有被访人信息 [GET /visitor/interviewees/search{?name,organizationid}]
+获取所有被访人信息，有过滤：姓名和组织
++ Parameters
+    + name: `杨喆` (string, optional) - 被访人姓名
+    + organizationid: `**科技公司` (string, optional) - 被访人部门
+
++ Response 200 (application/json)
+    + Attributes(array[Interviewee])
+
+
+### 获取企业组织信息 [GET /visitor/organizations]
+获取获取企业所有组织信息
++ Response 200 (application/json)
+    + Attributes(array[Organization])
+
+## 会谈 interview [/visitor/interviews]
+* 访客来访时登记新建会谈
+
+### 获取所有会谈信息 [GET /visitor/interviews{?visitorID,visitorName,intervieweeName,intervieweeDpName,begandate,enddate,active,len}]
+获取所有会谈信息，有分页、过滤：访客ID，访客姓名，被访人姓名，被访人部门名称,会谈开始时间,会谈结束时间
++ Parameters
+    + visitorID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, optional) - 访客ID
+    + visitorName: `张蕊蕊` (string, optional) - 访客姓名
+    + intervieweeName: `张蕊洁` (string, optional) - 被访人姓名
+    + intervieweeDpName: `研发部` (string, optional) - 被访人部门名称
+    + begandate: `2017-02-28` (string, optional) - 会谈开始日期
+    + enddate: `2017-02-28` (string, optional) - 会谈结束日期
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(Interviews)
+
+### 获取指定会谈信息 [GET /visitor/interviews/{id}]
+根据ID获取会谈信息
++ Parameters
+    + id: `920e5840-fa6d-11e6-b8d3-0242ac120004` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(Interview)
+
++ Response 404
+
+
+### 创建会谈 [POST /visitor/interviews]
+访客来访，建立会谈
++ Attributes(InterviewPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Interview)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改指定会谈 [PATCH /visitor/interviews/{id}]
+根据的会谈ID修改指定会谈
++ Parameters
+    + id: `920e5840-fa6d-11e6-b8d3-0242ac120004` (string, required) - uuid
+
++ Attributes
+    + object
+        + visitPeriod:`08:30-19:15` (string, required) - 会谈时间段
+        + visitDate:`2017-02-24` (string, required) - 会谈日期
+        + devices (array) - 授权设备列表
+            + e2189a5a-f811-11e6-b5c6-0242ac120016
+            + f963f421-ed0d-11e6-82b6-0242ac120016
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Interview)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 获取正在进行中的会谈 [GET /visitor/activeinterviews]
+获取正在进行中的会谈
++ Response 200 (application/json)
+    + Attributes(Interviews)
+
++ Response 404
+
+
+### 注销指定会谈 [POST /visitor/deleterule/{id}]
+根据的会谈ID取消指定会谈
++ Parameters
+    + id: `920e5840-fa6d-11e6-b8d3-0242ac120004` (string, required) - 会谈ID
++ Response 204
+
++ Response 404
+
+
+### 统计当天访问量 [GET /visitor/todayinterviewscount]
+统计当天访问量
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + total:`2` (number) - 访问总数
+        + visiting:`1` (number) - 正在进行中的访问个数
+        + logout:`1` (number) - 已经注销的放完个数
++ Response 404
+
+### 打印会谈信息 [POST /visitor/printinterview]
+打印会谈信息
++ Attributes(InterviewPost)
+
++ Request (application/json)
+
++ Response 200
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+## 访客门禁记录 record [/visitor/records]
+* 访客访问时通过门禁设备，保留通过记录
+
+### 获取所有通过记录 [GET /visitor/records{?visitorName,deviceName,direction,begantime,endtime,active,len}]
+获取所有通过记录，有分页、过滤：访客姓名,设备名称,方向,开始日期,结束日期
++ Parameters
+    + visitorName: `张蕊蕊` (string, optional) - 访客姓名
+    + deviceName: `设备1` (string, optional) - 设备名称
+    + direction: `1` (string, optional) - 方向
+    + begantime: `2017-02-28 00:00:00` (string, optional) - 开始时间
+    + endtime: `2017-02-28 13:00:00` (string, optional) - 结束日期
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
++ Response 200 (application/json)
+    + Attributes(Records)
+
+### 创建通过记录 [POST /visitor/records]
+创建通过记录
++ Attributes(RecordPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Record)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+## 访客指静脉采集 enroll [/visitor/enroll]
+* 访客终端访客指静脉采集
+
+### 访客指静脉采集 [POST /visitor/enroll]
+访客指静脉采集
++ Attributes
+    + object
+        + DeviceId:`cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 设备ID
+        + visitorID:`cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 访客ID
+        + finger:`l2` (string) - 访客手指名称
++ Request (application/json)
+
++ Response 202 (application/json)
+    + Headers
+    + Attributes (object)
+        + statusURL:`cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 查询的状态id
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询采集状态 [GET /visitor/enroll_status/{id}]
+查询采集状态
++ Parameters
+    + id: `920e5840-fa6d-11e6-b8d3-0242ac120004` (string, required) - 查询状态的id
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + status:`success` (string) - 采集的状态
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 访客授权设备管理 devices [/visitor/devices]
+* 访客可授权访问的设备管理
+
+### 修改可以授权的设备 [POST /visitor/devices]
+修改可以授权的设备
++ Attributes
+    + deviceList (array) - 可授权设备列表
+        + `cde5b5b5-fa64-11e6-a603-0242ac120006`
+        + `cde5n5b5-fa64-12e6-a6d3-0242ac120106`
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Headers
+    + Attributes(array[DeviceVisitor])
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 查询可以授权的设备 [GET /visitor/devices]
+查询可以授权的设备
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Attributes(array[DeviceVisitor])
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+## 客户端 Client [/visitor/client]
+* 客户端,建立PAD和门房客户端的对应关系
+
+### 获取所有客户端信息 [GET /visitor/clients]
+获取所有客户端信息
++ Response 200 (application/json)
+    + Attributes(object)
+        + page_num:`1` (number) - 记录总数
+        + data(array[Client]) - 客户端信息
+
+### 获取指定客户端信息 [GET /visitor/client/{id}]
+根据PADID获取客户端信息
++ Parameters
+    + id: `4120e1f3-f9ac-11e6-a1bd-0242ac120006` (string, required) - PADID
+
++ Response 200 (application/json)
+    + Attributes(Client)
+
++ Response 404
+
+
+### 创建客户端 [POST /visitor/client]
++ Attributes(Client)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Client)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改指定客户端 [PUT /visitor/client/{id}}]
+根据的PADID修改客户端
++ Parameters
+    + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - uuid
+
++ Attributes(Client)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Client)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除指定客户端 [DELETE /visitor/client/{id}]
+根据PADID删除客户端
++ Parameters
+    + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+# Group 消费 payment
+
+## 消费记录 dealrecords [/payment/dealrecords]
+
+* 用户消费记录，只具备查看功能
+
+### 检索所有消费记录 [GET /payment/dealrecords{?accountID,customerID,deviceID,merchantID,beganDate,endDate,type,active,len}]
+
+检索所有消费记录，有分页。
+
++ Parameters
+    + accountID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 账户ID
+    + customerID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 用户ID
+    + deviceID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 设备ID
+    + merchantID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string,optional) - 商户ID
+    + beganDate: `2006-01-02` (string,optional) - 开始时间
+    + endDate: `2006-01-02` (string,optional) - 结束时间
+    + type: `1` (string,optional) - 交易记录类型，1消费/2退款/3充值
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[DealRecord])
+    
+
+    
+## 消费者 customers [/payment/customers]
+
+* 用户消费者，新建用户需要在core person中进行申请
+
+### 获取所有消费者信息 [GET /payment/customers{?active,len}]
+
+获取所有消费者，有分页
+
++ Parameters
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[Customer])
+
+
+### 获取一个消费者信息 [GET /payment/customers/{id}]
+
+根据ID获取一个消费者信息
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid    
+    
++ Response 200 (application/json)
+    + Attributes(Customer)
+
++ Response 404
+
+
+### 创建一个消费者 [POST /payment/customers]
+
++ Attributes(CustomerPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+    
+    + Attributes(Customer)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改一个消费者信息 [PUT /payment/customers/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(CustomerPost)
+    
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Customer)
+    
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+
+### 删除一个消费者 [DELETE /payment/customers/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+    
++ Request (application/json)
+
++ Response 204 
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+    
+## 账户 account [/payment/accounts{?active,len}]
+
+* 用户账户，一个账户可以绑定到多个人上，每个账户只有一个主用户
+
+### 获取所有账户信息 [GET]
+
+获取所有账户，有分页
+
++ Parameters
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[Account])
+
+
+
+### 获取一个账户信息 [GET /payment/accounts/{id}]
+
+根据ID获取一个账户信息
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid    
+    
++ Response 200 (application/json)
+    + Attributes(Account)
+
++ Response 404
+
+### 创建一个账户 [POST /payment/accounts]
+
++ Attributes(AccountPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+    
+    + Attributes(Account)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 修改一个账户 [PUT /payment/accounts/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(AccountPost)
+    
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Account)
+    
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 充值一个账户 [PATCH /payment/accounts/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes
+    + money: `300` (number, optional) - 金额，单位：分
+    + virtual: `500` (number, optional) - 虚拟金额，无法提现，单位：分
+    
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Account)
+    
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+
+
+### 给账户新增绑定用户 [PUT /payment/accounts/{id}/additional_user]
+
+此处若json携带id参数，那么说明是选择一个用户新增，若无ID，那么是直接新增一个用户
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(Customer)
+    
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Account)
+    
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+    
+### 删除一个账户 [DELETE /payment/accounts/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+    
++ Request (application/json)
+
++ Response 204 
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+    
+## 商户 merchant [/payment/merchants]
+
+* 商户负责与pos机相关联，用于统计消费信息
+
+### 获取所有商户 [GET /payment/merchants/{?active,len}]
+
+获取所有商户，有分页。
+
++ Parameters
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Attributes(array[Merchant])
+
+
+### 获取一个指定商户 [GET /payment/merchants/{id}]
+
+获取指定id的商户。
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Headers
+    
+    + Attributes(Merchant)
+    
+    + Body
+
++ Response 404
+
+
+### 创建一个商户 [POST /payment/merchants]
+
++ Attributes(MerchantPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+    
+    + Attributes(Merchant)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 修改一个商户 [PUT /payment/merchants/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes(MerchantDevicePost)
+    
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Merchant)
+    
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+
+### 删除一个商户 [DELETE /payment/merchants/{id}]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+    
++ Request (application/json)
+
++ Response 204 
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 给商户分配设备 [PUT /payment/merchants/{id}/additional_device]
+
++ Parameters
+    + id: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - uuid
+
++ Attributes (array, required)
+    + `0b4d4400-b78c-11e6-b23a-0242ac140009` (string) - 设备ID
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+    
+    + Attributes(Merchant)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+
+## 设备 posdevice [/payment/devices]
+
+* 此处设备只包含和消费相关设备，并且可以对pos机直接进行一些操作
+
+### 获取所有设备 [GET]
+
+获取所有设备，无分页
+
++ Response 200 (application/json)
+    + Attributes(array[PosDeviceGet])
+
+
+### 获取某个设备 [GET /payment/devices/{id}]
+
+根据ID获取某个设备
+
++ Response 200 (application/json)
+    + Attributes(array[PosDeviceGet])
+
+
+### 向POS机发送设置命令 [POST /payment/devices/cmd]
+
+根据不同命令，设置设备不同的属性
+
++ Attributes
+    + deviceID: `0b4d4400-b78c-11e6-b23a-0242ac140009` (string, required) - 设备ID
+    + posTime: `2006-01-02 15:04:05` (string, optional) - 设置pos机显示时间
+    + stayTime: `200` (number, optional) - 设置pos机信息停留时间，单位10ms
+    + cmd: `setTime/setStay/getTime` (string, required) - 命令
+    
++ Request (application/json)
+
++ Response 202
+    + Attributes
+        + posTime: `2006-01-02 15:04:05` (string) - 设备时间
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+
+# Group 考试 exam
+## 考试人员 person [/exam/person]
+
+* 考试人员，新建考试人员需要在core person中进行申请
+
+### 获取所有考试人员 [GET /exam/persons{?category,active,len}]
+获取所有考试人员，有分页，过滤：考试人员所属公司
++ Parameters
+    + category: `**公司` (string, optional) - 考试人员所属公司
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (string, optional) - 当前页数据量
+
++ Response 200 (application/json)
+    + Headers
+    
+            X-Total-Count: `1`
+    + Attributes(array[ExamPerson])
+
+### 获取指定考试人员信息 [GET /exam/person/{id}]
+根据ID获取考试人员信息
++ Parameters
+    + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - uuid    
+    
++ Response 200 (application/json)
+    + Attributes(ExamPerson)
+
++ Response 404
+
+### 手动新增考试人员 [POST /exam/person]
+考试人员参加考试，建立考试人员信息
++ Attributes(ExamPersonPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+    
+    + Attributes(ExamPerson)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 修改指定考试人员 [PUT /exam/person/{id}]
+根据的考试人员ID修改指定考试人员
++ Parameters
+    + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - uuid
+
++ Attributes(ExamPersonPost)
+    
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(ExamPerson)
+    
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+
+### 删除指定考试人员 [DELETE /exam/person/{id}]
+根据考试人员ID删除考试人员
++ Parameters
+    + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - uuid
+    
++ Request (application/json)
+
++ Response 204 
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### PAD上报人员 [POST /exam/person/full]
+PAD离线采集人员后，在线状态时会向服务器推送人员信息
++ Attributes(PadPerson)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+    
+    + Attributes(ExamPerson)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 获取所有考试人员快照信息 [GET /exam/person/snapshot]
+PAD在线时同步人员信息会向服务器获取所有考试人员快照信息
+考试系统同步人员信息会向服务器获取所有考试人员快照信息
+
++ Response 200 (application/json)
+    + Attributes (array)
+        + (object)
+            + id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 人员ID
+            + etag: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - etag标识
+
+
+### 获取所有公司信息 [GET /exam/companys]
+前端显示人员信息时需要所有的公司信息
+
++ Response 200 (application/json)
+    + Attributes (array)
+        + `**公司` (string) - 公司名称
+        + `**科技有限公司` (string) - 公司名称
+
+
+### 导入模板下载 [GET /exam/getexample]
+获取导入模板，下载excel文件
+
++ Request (application/json)
+
++ Response 200 (application/xls)
+
+### 导入考试人员 [POST /exam/importperson]
+导入考试人员，返回导入结果
+
++ Request
+    + Headers
+    
+            name: `file`
+            filename: `指静脉考试系统模板.xlsx`
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        + total: `2` (number) - 导入总条数
+        + success: `1` (number) - 成功的条数
+        + error: `1` (number) - 失败的条数
+        + errorcells: `张三 1`- 失败的详细信息、
+
+### 导出考试人员 [GET /exam/exportperson{?category}]
+导出考试人员，下载excel文件，有过滤：考试人员公司
++ Parameters
+    + category: `**公司` (string, optional) - 考试人员所属公司
+    
++ Request (application/json)
+
++ Response 200 (application/xls)
+
+### 备份考试人员[GET /exam/person/backup{?id}]
+
++ Response 200(application/x-gzip)
+
+### 恢复考试人员[POST /exam/person/restore]
++ Request
+    + Headers
+    
+            name:`file`
+            filename:`exampersonall.gz`
++ Response 200
+    (application/json)
+    + Attributes (object)
+        + total: `2` (number) - 导入总条数
+        + success: `1` (number) - 成功的条数
+        + error: `1` (number) - 失败的条数
+        + errorcells: `张三 1`- 失败的详细信息、
+
+## 人员扩展信息 extraProp [/exam/extraprop]
+
+* 人员扩展信息，新建考试人员可以根据用户需求扩展考试人员信息
+
+### 获取所有扩展信息 [GET /exam/extraprops]
+获取所有扩展信息
+
++ Response 200 (application/json)
+    + Attributes(array[ExtraProp])
+
+
+### 获取指定扩展信息 [GET /exam/extraprop/{id}]
+根据ID获取扩展信息
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Response 200 (application/json)
+    + Attributes(ExtraProp)
+
++ Response 404
+
+
+### 创建扩展信息 [POST /exam/extraprop]
+创建扩展信息
++ Attributes(ExtraProp)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(ExtraProp)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改指定扩展信息 [PUT /exam/extraprop/{id}]
+根据ID修改指定扩展信息
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Attributes(ExtraProp)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(ExtraProp)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除指定扩展信息 [DELETE /exam/extraprop/{id}]
+根据ID删除指定扩展信息
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+## 考试科目 subject [/exam/subject]
+
+* 考试科目,增加考试时需要选择考试科目
+
+### 获取所有考试科目 [GET /exam/subjects]
+获取所有考试科目
+
++ Response 200 (application/json)
+    + Attributes(array[Subject])
+
+
+### 创建考试科目 [POST /exam/subject]
+创建考试科目
++ Attributes(Subject)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Subject)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改指定考试科目 [PUT /exam/subject/{id}]
+根据ID修改指定考试科目
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Attributes(Subject)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Subject)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除指定考试科目 [DELETE /exam/subject/{id}]
+根据ID删除指定考试科目
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 考场 room [/exam/room]
+
+* 考试考场,增加考试时需要选择考试考场
+
+### 获取所有考试考场 [GET /exam/rooms]
+获取所有考试考场
+
++ Response 200 (application/json)
+    + Attributes(array[Room])
+
+
+### 创建考试考场 [POST /exam/room]
+创建考试考场
++ Attributes(Room)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes(Room)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 修改指定考试考场 [PUT /exam/room/{id}]
+根据ID修改指定考试考场
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Attributes(Room)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes(Room)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 删除指定考试考场 [DELETE /exam/room/{id}]
+根据ID删除指定考试考场
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+## 考试 examination [/exam/examination]
+
+* 考试
+
+### 获取所有考试 [GET /exam/examinations{?archiveFlag}]
+获取所有考试
++ Parameters
+    + archiveFlag: `1` (string, required) - 获取考试是否归档标识 
++ Response 200 (application/json)
+    + Headers
+    
+            X-Total-Count: `1`
+    + Attributes (array[Examination])
+
+### 获取指定考试信息 [GET /exam/examination/{id}]
+根据ID获取考试信息
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid    
+    
++ Response 200 (application/json)
+    + Attributes (Examination)
+
++ Response 404
+
+### 创建考试 [POST /exam/examination]
+创建考试
++ Attributes(ExaminationPost)
+
++ Request (application/json)
+
++ Response 201 (application/json)
+
+    + Headers
+
+    + Attributes (Examination)
+
++ Response 400 (application/json)
+    + Attributes (Error400)
+
+### 修改指定考试 [PUT /exam/examination/{id}]
+根据ID修改指定考试
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Attributes (ExaminationPost)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes (Examination)
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes (Error400)
+
+
+### 删除指定考试 [DELETE /exam/examination/{id}]
+根据ID删除指定考试
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 204
+
++ Response 400 (application/json)
+    + Attributes (Error400)
+    
+
+### 归档考试 [PUT /exam/archive/{id}]
+根据ID归档指定考试
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - uuid
+
++ Request (application/json)
+
++ Response 200
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+
+### 录入分数 [POST /exam/examinations/{exam_id}/students/{sdid}/score]
+录入某人在考试中的分数
++ Parameters
+    + exam_id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - 考试uuid
+    + sdid: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 考生ID uuid
++ Attributes (object)
+    + sdID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 考生id
+    + examID: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - 考试id
+    + score: `79` (number) - 分数
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+    + Attributes (object)
+        + sdID: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 考生id
+        + examID: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string) - 考试id
+        + score: `79` (number) - 分数
+
+    + Body
+
++ Response 400 (application/json)
+    + Attributes (Error400)
+
+### 获取某场考试的成绩或录入成绩单模板 [GET /exam/exportscore{?examid,flag}]
+获取某场考试的成绩录入单模板，下载excel文件
+* 当flag为example时获得录入成绩单模板
+* 否则为导出成绩
+
++ Parameters
+    + examid: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - 考试uuid
+    + flag: `example` (string, required) - 是否导出模板标识
+
++ Request (application/json)
+
++ Response 200 (application/xls)
+
+### 导入考试成绩 [POST /exam/importscore]
+下载某场考试成绩模板，录入成绩，导入成绩
+
++ Request
+    + Headers
+    
+            name: `file`
+            filename: `20170203电工考试成绩单.xlsx`
+            
++ Response 200 (application/json)
+    + Attributes (object)
+        + total: `2` (number) - 导入总条数
+        + success: `1` (number) - 成功的条数
+        + error: `1` (number) - 失败的条数
+        + errorcells: `610101199111112222 张三 96`- 失败的详细信息
+
+### 单人交卷 [PUT /exam/handpaper/{exam_id}/students/{sdid}]
+一场考试中,单人交卷
++ Parameters
+    + exam_id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - 考试uuid
+    + sdid: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 考生ID uuid
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 全部交卷 [PUT /exam/handpapers/{exam_id}]
+考试结束，所有人交卷
++ Parameters
+    + exam_id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - 考试uuid
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+## 考试人员指静脉 enroll [/exam/enroll]
+* 考试人员指静脉采集和删除
+
+### 考试人员指静脉采集 [POST /exam/enroll/{id}]
+考试人员指静脉采集
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - 人员uuid
++ Attributes (object)
+    + deviceID:`cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 设备ID
+    + finger:`l2` (string) - 人员手指名称
++ Request (application/json)
+
++ Response 200 (application/json)
+
+### 删除人员指静脉 [PATCH /exam/enroll/{id}]
+删除人员指静脉
++ Parameters
+    + id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - 人员uuid
++ Attributes (array[string])
+    + `l2`
+    + `l3`
++ Request (application/json)
+
++ Response 200 (application/json)
+
+## 考试人员验证记录 records [/exam/records]
+* 考试人员验证记录存储、获取、导出
+
+### 考试人员验证记录存储 [POST /exam/records/{record_id}]
+考试人员验证记录存储
++ Parameters
+    + record_id: `f5b49ea0-fd96-11e6-a0c3-0242ac12000a` (string, required) - 人员uuid
++ Attributes(Examrecordpost)
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Attributes(Examrecord)
+
+### 考试人员验证记录获取 [GET /exam/records{?personname,devicename,starttime,endtime,active,len}]
+考试人员验证记录获取,有分页，有过滤：人员姓名、设备名称、验证时间
++ Parameters
+    + personname: `张瑞瑞` (string, optional) - 人员姓名
+    + devicename: `考试设备` (string, optional) - 设备名称
+    + starttime: `2017-03-01 03:03:04` (string, optional) - 开始时间
+    + endtime: `2017-03-02 03:03:04` (string, optional) - 结束时间
+    + active: `1` (string, optional) - 当前页码
+    + len: `50` (strifining, optional) - 当前页数据量
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Headers
+    
+            X-Total-Count: `1`
+    + Attributes(array[Examrecord])
+
+### 导出考试人员验证记录 [GET /exam/exportrecords{?personname,devicename,starttime,endtime}]
+导出考试人员验证记录，下载excel文件，有过滤：人员姓名、设备名称、验证时间
++ Parameters
+    + personname: `张瑞瑞` (string, optional) - 人员姓名
+    + devicename: `考试设备` (string, optional) - 设备名称
+    + starttime: `2017-03-01 03:03:04` (string, optional) - 开始时间
+    + endtime: `2017-03-02 03:03:04` (string, optional) - 结束时间
+    
++ Request (application/json)
+
++ Response 200 (application/xls)
+
+## 考试人员验证 verification [/exam/verification]
+* 考试人员开始验证、验证结果查询，用于帝维系统登录
+
+###  考试人员开始验证 [POST /exam/verification]
+ 考试人员开始验证
++ Attributes
+    + object
+        + sdid:`cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 人员ID
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + requestID: `cde5b5b5-fa64-11e6-a603-0242ac120006`  (string) - 请求id
+        + statusURL: `/exam/verification/cde5b5b5-fa64-11e6-a603-0242ac120006` (string) - 查询的状态url
++ Response 400 (application/json)
+    + Attributes(Error400)
+
+### 验证结果查询 [GET /exam/verification/{request_id}]
+验证结果查询
++ Parameters
+    + request_id: `cde5b5b5-fa64-11e6-a603-0242ac120006` (string, required) - 人员uuid
++ Response 200 (application/json)
+    + Headers
+    
+            Cache-Control: `no-cache`
+            Pragma: `no-cache`
+            Expires: `2017-02-14 14:00:00`
+    + Attributes (object)
+        + status: `success|fail|error|timeout` (string) - 验证状态
++ Response 400 (application/json)
+    + Attributes(Error400)
+    
+    
+
+# Group 现场 remotesite
+
+## 现场人员person [/remotesite/persons]
+
+###获取所有现场人员 [GET /remotesite/persons]
+###获取指定现场人员 [GET /remotesite/persons/:id]
+###手动新增现场人员 [POST /remotesite/persons]
+###修改指定现场人员 [PUT /remotesite/persons]
+###删除指定现场人员 [DELETE /remotesite/persons/:id]
+###PAD上报人员  [GET /remotesite/person/full]
+###备份现场人员 [GET /remotesite/person/backup]
+###恢复现场人员 [POST /remotesite/person/restore]
+
+## 现场领导ledaer [/remotesite/leaders]
+
+###获取所有领导 [GET /remotesite/leaders]
+###获取指定领导 [GET /remotesite/leaders/:id]
+###手动新增领导 [POST /remotesite/leaders]
+###修改指定领导 [PUT /remotesite/leaders]
+###删除指定领导 [DELETE /remotesite/leaders/:id]
+
+## 现场公司company [/remotesite/companies]
+
+###获取所有公司 [GET /remotesite/companiess]
+###获取指定公司 [GET /remotesite/companies/:id]
+###手动新增公司 [POST /remotesite/companies]
+###修改指定公司 [PUT /remotesite/companies]
+###删除指定公司 [DELETE /remotesite/companies/:id]
+###给现场添加人员 [PATCH /remotesite/companies/:id]
+
+
+## 现场人员额外信息extraprop [/remotesite/extraprop]
+
+###获取所有额外信息 [GET /remotesite/extraprops]
+###获取指定额外信息 [GET /remotesite/extraprop/:id]
+###手动新增额外信息 [POST /remotesite/extraprop]
+###修改指定额外信息 [PUT /remotesite/extraprop]
+###删除指定额外信息 [DELETE /remotesite/extraprop/:id]
+
+
+# Group 社保 socialinsurance
+
+## 社保人员person [/socialinsurance/persons]
+
+###增加参保人员 [POST /socialinsurance/persons]
+###修改参保人员 [PUT /socialinsurance/persons]
+###查询参保人员 [GET /socialinsurance/persons/:id]
+###查询所有参保人员 [GET /socialinsurance/persons]
+###删除参保人员 [DELETE /socialinsurance/persons/:id]
+###备份人员信息 [GET /socialinsurance/person/backup]
+###恢复人员信息 [POST /socialinsurance/person/restore]
+
+## 社保管理员user [/socialinsurance/users]
+
+###增加管理人员 [POST /socialinsurance/users]
+###修改管理人员 [PUT /socialinsurance/users]
+###查询管理人员 [GET /socialinsurance/users/:id]
+###查询所有管理人员 [GET /socialinsurance/users]
+###删除管理人员 [DELETE /socialinsurance/users/:id]
+
+## 社保机构location [/socialinsurance/locations]
+
+###增加社保机构 [POST /socialinsurance/locations]
+###修改社保机构 [PUT /socialinsurance/locations]
+###查询社保机构 [GET /socialinsurance/locations/:id]
+###查询所有社保机构 [GET /socialinsurance/locations]
+###删除社保机构 [DELETE /socialinsurance/locations/:id]
+
+## 社保人员指静脉feature [/socialinsurance/features]
+
+
+
+# Group 其他 other
+
+## Minio存储 minioadapter [/other/minioadapter]
+* 适配Minio相关存储
+
+### 获取下载url [GET /oss/geturl{?bucket,objectname}]
+
+获取存储对象的授权下载地址
++ Parameters
+    + bucket: `visitor` (string, required) - 桶名
+    + objectname: `1.jpg` (string, required) - 对象名称
++ Request (application/json)
+
++ Response 200(application/json)
+
+    + Headers
+
+    + Attributes(object)
+        + url: `http://oss.xiafeng.net/visitor/1.jpg?X-Amz-Alg.....` 
++ Response 404
+
+### 获取修改url [GET /oss/puturl{?bucket,objectname}]
+获取存储对象的授权修改地址
++ Parameters
+    + bucket: `visitor` (string, required) - 桶名
+    + objectname: `1.jpg` (string, required) - 对象名称
++ Request (application/json)
+
++ Response 200(application/json)
+
+    + Headers
+
+    + Attributes(object)
+        + url: `http://oss.xiafeng.net/visitor/1.jpg?X-Amz-Alg.....` 
++ Response 404
+
+### 获取上传url [GET /oss/posturl{?bucket,objectname}]
+
+获取存储对象的授权上传地址及信息
++ Parameters
+    + bucket: `visitor` (string, required) - 桶名
+    + objectname: `1.jpg` (string, required) - 对象名称
++ Request (application/json)
+
++ Response 200(application/json)
+
+    + Headers
+
+    + Attributes(object)
+        + bucket: `visitor` (string)
+        + key: `test.jpg` (string)
+        + policy: `eyJleHBpcmF0aW9u....` (string)
+        + url: `http://oss.xiafeng.net/visitor/` (string)
+        + x-amz-algorithm: `AWS4-HMAC-SHA256` (string)
+        + x-amz-credential: `shengdian/20170303/us-east-1/s3/aws4_request` (string)
+        + x-amz-date: `20170303T074354Z` (string)
+        + x-amz-signature: `078b4bd62560e817655a398dd93bc9f34285192ea50eed4f58a1d0068f849098"
++ Response 404
+
+### 删除存储对象 [DELETE /oss/delete{?bucket,objectname}]
+
+删除存储对象
++ Parameters
+    + bucket: `visitor` (string, required) - 桶名
+    + objectname: `1.jpg` (string, required) - 对象名称
++ Request (application/json)
+
++ Response 204
++ Response 404
+
+## 打印 posprint [/posprint]
+
+### 打印访客 [POST]
+
+使用80mm宽度的pos打印机打印访问信息
+
++ Attributes (object)
+    + title: `访客信息` (string) - 标题
+    + img_bucket: `visitor` (string) - oss bucket
+    + img_id: `02dc3e8f-b23d-11e6-b996-0242ac16000b.jpg` (string) - 图片在oss中的id
+    + body: `    访客:王大锤      被访人:小美\\n    日期:2016-12-21  有效期:18:00` (string) - 内容
+
++ Request (application/json)
+
++ Response 202
